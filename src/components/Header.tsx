@@ -2,10 +2,13 @@
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
+import { useState } from "react";
 
 export default function Header() {
     const pathname = usePathname(); // Using pathname to highlight the active navigation link
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false) // state for control mobile menu
 
     // navigation links
 
@@ -31,6 +34,22 @@ export default function Header() {
                     <Link href= "/">
                         <span className="text-2xl md:text-xl lg:text-3xl font-bold text-amber-500">Topendraa</span>
                     </Link>
+
+                    {/* mobile menu toggle button */}
+
+                    <motion.button
+                        className= "md:hidden text-white hover:text-white/80 cursor-pointer"
+                        onClick= {() => setIsMenuOpen(!isMenuOpen)}
+                        whileTap= {{ scale: 0.9 }}
+                    >
+                        {
+                            isMenuOpen ? (
+                                <X className="w-6 h-6"/>
+                            ) : (
+                                <Menu className="w-6 h-6"/>
+                            )
+                        }
+                    </motion.button>
                 </div>
 
                 {/* Search Bar */}
@@ -67,6 +86,39 @@ export default function Header() {
                     }
                 </nav>
             </div>
+
+            {/* Mobile Menu */}
+            <motion.div className={`md:hidden backdrop-blur-xs bg-[rgba(24,24,27,0.6)] z-50 absolute left-0 w-full px-4 py-4 ${ isMenuOpen ? 'block' : 'hidden' }`}
+            initial = {{ opacity: 0, y: -20 }}
+            animate = { isMenuOpen ? {opacity: 1, y: 0} : {opacity: 0, y: -20} }
+            transition={{ duration: 0.3 }}
+            >
+                {/* Search bar */}
+                <motion.div className="relative w-full mb-4">
+                    <input type="text"
+                        placeholder="Quick Search..."
+                        className= "w-full px-4 py-2 bg-white text-gray-500 placeholder-gray-500 rounded-xl border border-gray-500 focus:outline-none focus:border-white pr-10"
+                    />
+                    <button className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer">
+                        <Search className="w-5 h-5 text-gray-500"/>
+                    </button>
+                </motion.div>
+                
+                {/* Mobile Navigation Links */}
+                <nav className="flex flex-col gap-2 items-center">
+                    {
+                        navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.path}
+                                className="block text-white text-base font-medium hover:text-white/80"
+                            >
+                                {link.name}
+                            </Link>
+                        ))
+                    }
+                </nav>
+            </motion.div>
         </motion.header>
     )
 }
