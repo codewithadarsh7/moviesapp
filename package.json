@@ -15,7 +15,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sharp": "^0.35.3",
-    "swiper": "^14.1.0",
+    "swiper": "^14.2.0",
     "swr": "^2.5.0"
   },
   "devDependencies": {

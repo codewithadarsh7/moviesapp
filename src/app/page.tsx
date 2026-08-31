@@ -1,7 +1,9 @@
+import HeaderSection from "@/components/HeaderSection";
+
 export default function Home() {
   return (
-    <div className="bg-black min-h-screen text-white flex items-center justify-center">
-      Home Page
+    <div className="min-h-screen text-white min-w-0 w-full overflow-x-hidden">
+      <HeaderSection />
     </div>
   );
 }

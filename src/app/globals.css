@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
+
 body{
-  background-color: black;
+  background-color: rgb(29, 28, 28);
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
+}
+
+.swiper,
+.swiper-wrapper,
+.swiper-slide {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
