@@ -78,6 +78,9 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
         slidesPerView={1}
         observer={true}
         observeParents={true}
+        pagination={{
+          clickable: true,
+        }}
         onSlideChange={(swiper) => setcurrentSlide(swiper.realIndex)}
         onSwiper={(swiper) => setswiperInstance(swiper)}
         className="w-full max-w-full h-[670px] sm:h-full md:h-[670px]"
