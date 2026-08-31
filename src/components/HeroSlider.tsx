@@ -101,7 +101,7 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
                 }}
               ></div>
               <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/80"></div>
-              <div className="absolute inset-0 flex items-center sm:items-end p-4 sm:p-8 md:p-20 text-white max-w-xs sm:max-w-md md:max-w-2xl">
+              <div className="absolute inset-0 flex items-center sm:items-end p-5 sm:p-5 md:p-20 text-white max-w-xs sm:max-w-md md:max-w-2xl">
                 <div>
                   <Link
                     href={`/details?id=${media.id}&media_type=${media.media_type}`}

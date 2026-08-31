@@ -93,7 +93,7 @@ export default function Header() {
 
   return (
     <motion.header
-      className="bg-transparent text-white w-full py-2 z-50 px-4 md:px-10 xl:px-36 absolute top-0 left-0"
+      className="bg-transparent text-white w-full py-2 z-50 px-5 md:px-20 xl:px-20 absolute top-0 left-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
