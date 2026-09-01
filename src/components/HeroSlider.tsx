@@ -5,9 +5,20 @@ import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-
-import React, { useState } from "react";
+import useSWR from "swr";
+import { useState } from "react";
 import Link from "next/link";
+import TrailerModal from "./TrailerModal";
+
+// fetch data from the url and return it as JSON and throw error if the request fails
+
+const fetcher = (url: string) =>
+  fetch(url).then((res) => {
+    if (!res.ok) {
+      throw new Error("Failed to fetch trailer");
+    }
+    return res.json();
+  });
 
 interface Movie {
   id: number;
@@ -29,6 +40,8 @@ interface HeroSliderProps {
 const HeroSlider = ({ movies }: HeroSliderProps) => {
   const [currentSlide, setcurrentSlide] = useState(0); // state to track the current slide index
   const [swiperInstance, setswiperInstance] = useState<SwiperType | null>(null); // store swiper instance for controlling slide navigation
+  const [isModalOpen, setIsModalOpen] = useState(false); // state to show or hide the trailer modal
+  const [selectedMedia, setSelectedMedia] = useState<Movie | null>(null); // store the selected media to display its trailer
 
   // create a function to get the media title
   const getMediaTitle = (media: any) => {
@@ -66,6 +79,37 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
       setcurrentSlide(index);
     }
   };
+
+  // fetch trailer videos for the selected media using SWR
+  const { data: trailerData, error } = useSWR(
+    selectedMedia
+      ? `https://api.themoviedb.org/3/${selectedMedia.media_type}/${selectedMedia.id}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US`
+      : null,
+    fetcher,
+  );
+
+  // find the first youtube trailer from the fetched videos
+  const trailer = trailerData?.results?.find(
+    (video: any) => video.site === "YouTube" && video.type === "Trailer",
+  );
+
+  // build the youtube embed URL for the trailer if it founds
+  const trailerUrl = trailer
+    ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1`
+    : null;
+
+  // open the trailer modal and set the selected media
+  const openModal = (media: any) => {
+    setSelectedMedia(media);
+    setIsModalOpen(true);
+  };
+
+  // close the trailer modal and clear the selected media
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedMedia(null);
+  };
+
   console.log("MOVIES:", movies);
   console.log("FIRST MOVIE:", movies[0]);
   return (
@@ -128,6 +172,8 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
                     )}
                   </p>
                   <button
+                    onClick={() => openModal(media)}
+                    disabled={!media.id}
                     className={`mt-5 sm:mt-8 inline-block bg-yellow-400 text-black px-4 py-2 sm:px-4 sm:py-2 md:py-3 rounded-lg font-semibold hover:bg-yellow-500 transition text-sm sm:text-base md:text-base ${!media.id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     Watch Trailer
@@ -138,33 +184,14 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
           </SwiperSlide>
         ))}
       </Swiper>
+      <TrailerModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        trailerUrl={trailerUrl}
+        title={selectedMedia ? getMediaTitle(selectedMedia) : "Trailer"}
+      />
     </section>
   );
 };
 
 export default HeroSlider;
-
-{
-  /* <section className="relative w-full min-w-0">
-      <Swiper
-        modules={[Autoplay, Pagination, EffectFade]}
-        effect="fade"
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
-        loop={movies.length > 1}
-        observer={true}
-        observeParents={true}
-        onSlideChange={(swiper) => setcurrentSlide(swiper.realIndex)}
-        onSwiper={(swiper) => setswiperInstance(swiper)}
-        className="w-full h-[360px] sm:h-[480px] md:h-[720px]"
-      >
-        {movies.map((media) => (
-          <SwiperSlide
-            key={`${media.media_type}-${media.id}`}
-            className="w-[500px]"
-          >
-            <div style={{ color: "white" }}>{getMediaTitle(media)}</div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </section> */
-}
