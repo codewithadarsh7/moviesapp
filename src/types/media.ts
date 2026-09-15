@@ -6,6 +6,7 @@ export interface Media {
   poster_path: string | null;
   overview?: string;
   release_date?: string;
+  first_air_date?: string; // TV shows use this instead of release_date
   vote_average?: number;
   genre_ids?: number[];
   original_language?: string;

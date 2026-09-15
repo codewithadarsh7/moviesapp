@@ -65,7 +65,7 @@ const Card = ({ media }: CardProps) => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex-none w-40 sm:w-48 md:w-56 min-w-[280px] max-w-[284px] bg-[#18181b] rounded-lg overflow-hidden shadow-lg snap-start">
+    <div className="flex-none w-40 sm:w-48 md:w-56 min-w-[180px] max-w-[284px] bg-[#18181b] rounded-lg overflow-hidden shadow-lg snap-start">
       <Link href={`/details?id=${id}&media_type=${mediaType}`}>
         <div className="relative aspect-[2/3] group cursor-pointer">
           <Image
