@@ -1,5 +1,5 @@
 "use client";
-
+import { Media } from "@/types/media";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -7,17 +7,8 @@ import useSWR from "swr";
 import TrailerModal from "./TrailerModal";
 import { FaYoutube } from "react-icons/fa";
 
-interface Movie {
-  id: number;
-  media_type?: string;
-  title?: string;
-  name?: string;
-  poster_path?: string;
-  vote_average?: number;
-}
-
 interface CardProps {
-  media: Movie;
+  media: Media;
 }
 
 interface Video {
@@ -33,6 +24,7 @@ interface TrailerResponse {
 // helper function to fetch JSON data from URL (used with SWR to automatically fetch and cache data)
 const fetcher = (url: string): Promise<TrailerResponse> =>
   fetch(url).then((res) => {
+    if (res.status === 404) return { results: [] }; // ID mismatch or no videos indexed — not fatal
     if (!res.ok) throw new Error("failed to fetch trailer");
     return res.json();
   });
@@ -73,7 +65,7 @@ const Card = ({ media }: CardProps) => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex-none w-40 sm:w-48 md:w-56 min-w-[160px] max-w-[224px] bg-[#18181b] rounded-lg overflow-hidden shadow-lg snap-start">
+    <div className="flex-none w-40 sm:w-48 md:w-56 min-w-[280px] max-w-[284px] bg-[#18181b] rounded-lg overflow-hidden shadow-lg snap-start">
       <Link href={`/details?id=${id}&media_type=${mediaType}`}>
         <div className="relative aspect-[2/3] group cursor-pointer">
           <Image
@@ -86,7 +78,6 @@ const Card = ({ media }: CardProps) => {
             fill
             className="object-cover rounded-t-lg group-hover:brightness-95 transition-all"
             sizes="33vw"
-            quality={90}
           />
         </div>
       </Link>

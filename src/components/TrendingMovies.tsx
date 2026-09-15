@@ -1,33 +1,8 @@
-// fetch the trending movies of the week from TMDB
-
 import Card from "./Card";
-
-interface Movie {
-  id: number;
-  media_type?: string;
-  title?: string;
-  name?: string;
-  poster_path?: string;
-  vote_average?: number;
-}
-
-const fetchTrendingMovies = async (): Promise<Movie[]> => {
-  const apikey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-
-  const res = await fetch(
-    `https://api.themoviedb.org/3/trending/movie/week?api_key=${apikey}`,
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-  const movies: Movie[] = data.results ? data.results.slice(3, 8) : [];
-
-  return movies;
-};
+import { fetchMediaList } from "@/lib/tmdb";
 
 const TrendingMovies = async () => {
-  const movies = await fetchTrendingMovies();
+  const movies = await fetchMediaList("/trending/movie/week", "movie");
 
   return (
     <section className="py-8 px-4 sm:px-8 md:px-20 bg-black text-white">

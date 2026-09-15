@@ -1,33 +1,8 @@
-// fetch the trending movies of the week from TMDB
-
 import Card from "./Card";
-
-interface Movie {
-  id: number;
-  media_type?: string;
-  title?: string;
-  name?: string;
-  poster_path?: string;
-  vote_average?: number;
-}
-
-const fetchTopRatedMovies = async (): Promise<Movie[]> => {
-  const apikey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/top_rated?api_key=${apikey}`,
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-  const movies: Movie[] = data.results ? data.results.slice(0, 5) : [];
-
-  return movies;
-};
+import { fetchMediaList } from "@/lib/tmdb";
 
 const TopRatedMovies = async () => {
-  const movies = await fetchTopRatedMovies();
+  const movies = await fetchMediaList("/movie/top_rated", "movie");
 
   return (
     <section className="py-8 px-4 sm:px-8 md:px-20 bg-black text-white">
@@ -38,7 +13,7 @@ const TopRatedMovies = async () => {
         {movies.length > 0 ? (
           movies.map((movie) => <Card key={movie.id} media={movie} />)
         ) : (
-          <p className="text-gray-400">No Top rated Movies Found</p>
+          <p className="text-gray-400">No Top Rated Movies Found</p>
         )}
       </div>
     </section>

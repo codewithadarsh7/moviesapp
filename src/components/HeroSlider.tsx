@@ -110,8 +110,6 @@ const HeroSlider = ({ movies }: HeroSliderProps) => {
     setSelectedMedia(null);
   };
 
-  console.log("MOVIES:", movies);
-  console.log("FIRST MOVIE:", movies[0]);
   return (
     <section className="relative w-full min-w-0 overflow-hidden">
       <Swiper
